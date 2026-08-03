@@ -1,0 +1,14 @@
+package com.hritik.portfolio.repository;
+
+import com.hritik.portfolio.entity.Role;
+import com.hritik.portfolio.enums.RoleType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface RoleRepository extends JpaRepository<Role,Long> {
+    Optional<Role> findByName(RoleType name);
+
+}
