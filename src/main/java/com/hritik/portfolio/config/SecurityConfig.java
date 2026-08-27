@@ -81,6 +81,8 @@ public class SecurityConfig {
                         auth.requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/public/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/error").permitAll() // 👈 YEH NAYA ADD KIYA (Asli error dekhne ke liye)
+                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // 👈 YEH NAYA ADD KIYA (CORS ko smoothly chalane ke liye)
                                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 );
