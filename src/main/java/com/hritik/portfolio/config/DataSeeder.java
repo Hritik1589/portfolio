@@ -1,12 +1,13 @@
 package com.hritik.portfolio.config;
 
 import com.hritik.portfolio.entity.Role;
-import com.hritik.portfolio.entity.User; // Ensure this matches your User entity import
+import com.hritik.portfolio.entity.User;
 import com.hritik.portfolio.enums.RoleType;
 import com.hritik.portfolio.repository.RoleRepository;
-import com.hritik.portfolio.repository.UserRepository; // Ensure this matches your repository
+import com.hritik.portfolio.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value; // Naya Import
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,13 @@ public class DataSeeder implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    // Yahan hum Render se variables lenge. Agar Render par nahi hue (jaise aapke PC par), toh default wale use honge.
+    @Value("${ADMIN_EMAIL:admin@portfolio.com}")
+    private String adminEmail;
+
+    @Value("${ADMIN_PASSWORD:admin123}")
+    private String adminPassword;
 
     @Override
     public void run(String... args) throws Exception {
@@ -41,20 +49,21 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedAdminUser() {
-        if (userRepository.findByEmail("admin@portfolio.com").isEmpty()) {
+        // Ab yahan hardcoded string ki jagah variables aayenge
+        if (userRepository.findByEmail(adminEmail).isEmpty()) {
             Role adminRole = roleRepository.findByName(RoleType.ROLE_ADMIN)
                     .orElseThrow(() -> new RuntimeException("Admin Role not found"));
 
             User admin = User.builder()
-                    .name("Super Admin") // <-- THIS WAS MISSING!
-                    .email("admin@portfolio.com")
-                    .password(passwordEncoder.encode("admin123"))
+                    .name("Super Admin")
+                    .email(adminEmail) // Variable use kiya
+                    .password(passwordEncoder.encode(adminPassword)) // Variable use kiya
                     .roles(Set.of(adminRole))
-                    .isActive(true) // Uncomment if your entity requires an active flag directly
+                    .isActive(true)
                     .build();
 
             userRepository.save(admin);
-            log.info("Seeded database with default Admin user: admin@portfolio.com / admin123");
+            log.info("Seeded database with Admin user: " + adminEmail);
         }
     }
 }
