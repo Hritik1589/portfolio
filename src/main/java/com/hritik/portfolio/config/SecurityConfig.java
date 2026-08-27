@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final AuthEntryPointJwt unauthorizedHandler;
     private final AuthTokenFilter authTokenFilter;
 
-    @Value("${APP_CORS_ALLOWED_ORIGINS}")
+    @Value("${APP_CORS_ALLOWED_ORIGINS:https://portfolio-frontend-three-dusky.vercel.app}")
     private String allowedOrigins;
 
     @Bean
