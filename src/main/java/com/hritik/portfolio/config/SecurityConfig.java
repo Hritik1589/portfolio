@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final AuthEntryPointJwt unauthorizedHandler;
     private final AuthTokenFilter authTokenFilter;
 
-    @Value("${app.cors.allowed-origins}")
+    @Value("${APP_CORS_ALLOWED_ORIGINS}")
     private String allowedOrigins;
 
     @Bean
