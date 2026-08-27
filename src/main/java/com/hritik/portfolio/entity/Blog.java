@@ -24,7 +24,7 @@ public class Blog extends BaseEntity{
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(name = "cover_image")

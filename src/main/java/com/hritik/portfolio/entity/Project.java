@@ -29,7 +29,7 @@ public class Project extends BaseEntity{
     @Column(name = "short_desc", nullable = false, length = 500)
     private String shortDescription;
 
-    @Column(name = "detailed_desc", columnDefinition = "LONGTEXT", nullable = false)
+    @Column(name = "detailed_desc", columnDefinition = "TEXT", nullable = false)
     private String detailedDescription;
 
     @Column(name = "github_url")
