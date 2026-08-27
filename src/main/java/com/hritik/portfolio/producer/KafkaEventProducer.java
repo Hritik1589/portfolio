@@ -1,13 +1,10 @@
 package com.hritik.portfolio.producer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hritik.portfolio.config.KafkaConfig;
 import com.hritik.portfolio.event.ContactMessageEvent;
 import com.hritik.portfolio.event.EmailNotificationEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,32 +12,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class KafkaEventProducer {
 
-    // Kafka is configured to expect Strings
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper objectMapper;
+    // KafkaTemplate ki jagah Spring ka apna Event Publisher use karenge
+    private final ApplicationEventPublisher eventPublisher;
 
     // 1. Handles the Contact Message Event
     public void publishContactMessageEvent(ContactMessageEvent event) {
-        try {
-            String jsonMessage = objectMapper.writeValueAsString(event);
-            kafkaTemplate.send(KafkaConfig.TOPIC_CONTACT_MESSAGE, jsonMessage);
-
-            // Using getMessageId() based on your service logic!
-            log.info("Publishing contact message event for Message ID: {}", event.getMessageId());
-        } catch (JsonProcessingException e) {
-            log.error("Failed to convert ContactMessageEvent to JSON string", e);
-        }
+        log.info("Publishing contact message event for Message ID: {}", event.getMessageId());
+        // Direct event bhej rahe hain (No JSON conversion needed!)
+        eventPublisher.publishEvent(event);
     }
 
-    // 2. Handles the Email Notification Event (Missing previously!)
+    // 2. Handles the Email Notification Event
     public void publishEmailNotificationEvent(EmailNotificationEvent event) {
-        try {
-            String jsonMessage = objectMapper.writeValueAsString(event);
-            kafkaTemplate.send(KafkaConfig.TOPIC_EMAIL_NOTIFICATION, jsonMessage);
-
-            log.info("Publishing email notification event to: {}", event.getTo());
-        } catch (JsonProcessingException e) {
-            log.error("Failed to convert EmailNotificationEvent to JSON string", e);
-        }
+        log.info("Publishing email notification event to: {}", event.getTo());
+        eventPublisher.publishEvent(event);
     }
 }
