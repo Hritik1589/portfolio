@@ -75,11 +75,10 @@ public class AuthServiceImpl implements AuthService {
                 .mobile(request.getMobile())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Set.of(userRole))
-                .isActive(false) // Must verify OTP to activate
+                .isActive(true) // 👈 Direct active kar diya, OTP ki zaroorat nahi
                 .build();
 
         userRepository.save(user);
-        generateAndSendOtp(user.getEmail(), OtpTargetType.EMAIL);
     }
 
     @Override
